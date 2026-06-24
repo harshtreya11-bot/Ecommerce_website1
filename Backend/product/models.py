@@ -22,3 +22,23 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+class Hero(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='heroes/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class Testimonial(models.Model):
+    name = models.CharField(max_length=100)
+    text = models.TextField()
+    image = models.ImageField(upload_to='testimonials/', blank=True, null=True)
+    rating = models.IntegerField(default=5)
+    role = models.CharField(max_length=100, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

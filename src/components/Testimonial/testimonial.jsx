@@ -1,54 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaStar, FaQuoteLeft } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import image1 from "../../assets/testimonial/Gemini_Generated_Image_a1366ha1366ha136.png";
-import image2 from "../../assets/testimonial/Gemini_Generated_Image_hwy6vkhwy6vkhwy6.png";
-import image3 from "../../assets/testimonial/mansi_photo.jpeg";
-
-const Testimonial_data = [
-  {
-    id: 1,
-    name: "Aarav",
-    text: "Absolutely love this store! The quality of products is amazing and delivery was super fast. Will definitely shop again!",
-    img: image1,
-    rating: 5,
-    role: "Regular Customer",
-    aosDelay: 0,
-  },
-  {
-    id: 2,
-    name: "Harsh",
-    text: "Best online shopping experience I've had. Great variety, competitive prices, and excellent customer support.",
-    img: image2,
-    rating: 5,
-    role: "Verified Buyer",
-    aosDelay: 200,
-  },
-  {
-    id: 3,
-    name: "Mansi",
-    text: "The clothes are top-notch! The fabric quality is excellent and sizing is accurate. Highly recommended to everyone!",
-    img: image3,
-    rating: 4,
-    role: "Loyal Shopper",
-    aosDelay: 400,
-  },
-
-  {
-    id: 4,
-    name: "Mansi",
-    text: "The clothes are top-notch! The fabric quality is excellent and sizing is accurate. Highly recommended to everyone!",
-    img: image3,
-    rating: 4,
-    role: "Loyal Shopper",
-    aosDelay: 400,
-  },
-];
+import api from "../../api";
 
 const Testimonial = () => {
+  const [Testimonial_data, setTestimonialData] = useState([]);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const response = await api.get('/api/products/testimonials/');
+        setTestimonialData(response.data);
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+      }
+    };
+    fetchTestimonials();
+  }, []);
+
   return (
     <div className="mt-10 mb-12">
       {/*Header Section*/}
@@ -89,7 +61,7 @@ const Testimonial = () => {
           }}
           className="mySwiper pb-10"
         >
-          {Testimonial_data.map((data) => (
+          {Testimonial_data.length > 0 ? Testimonial_data.map((data) => (
             <SwiperSlide key={data.id}>
               <div
                 data-aos="fade-up"
@@ -126,7 +98,7 @@ const Testimonial = () => {
                 {/*Profile*/}
                 <div className="flex items-center gap-3">
                   <img
-                    src={data.img}
+                    src={data.image || data.img}
                     alt={data.name}
                     className="w-12 h-12 rounded-full object-cover border-2 border-primary"
                   />
@@ -141,7 +113,7 @@ const Testimonial = () => {
                 </div>
               </div>
             </SwiperSlide>
-          ))}
+          )) : <div>Loading...</div>}
         </Swiper>
       </div>
     </div>

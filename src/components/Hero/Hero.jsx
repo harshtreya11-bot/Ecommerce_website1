@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 
@@ -6,32 +6,23 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-import Imagehero1 from "../../assets/Hero/Imagehero1.png";
-import Imagehero2 from "../../assets/Hero/Imagehero2.png";
-import Imagehero3 from "../../assets/Hero/Imagehero3.png";
-
-const ImageList = [
-  {
-    id: 1,
-    title: "Best Deals for this Summer Season",
-    description: "Get upto 70% Off on all items",
-    img: Imagehero1,
-  },
-  {
-    id: 2,
-    title: "Women Sarees under 70% Off",
-    description: "Top Quality Silk and Cotton Sarees",
-    img: Imagehero2,
-  },
-  {
-    id: 3,
-    title: "Best Deals on Girls Wears",
-    description: "Get Exciting offers and Discounts on Girls wears",
-    img: Imagehero3,
-  },
-];
+import api from "../../api";
 
 const Hero = () => {
+  const [ImageList, setImageList] = useState([]);
+
+  useEffect(() => {
+    const fetchHeroes = async () => {
+      try {
+        const response = await api.get('/api/products/heroes/');
+        setImageList(response.data);
+      } catch (error) {
+        console.error("Error fetching heroes:", error);
+      }
+    };
+    fetchHeroes();
+  }, []);
+
   return (
     <div
       className="relative overflow-hidden min-h-[500px] sm:min-h-[600px]
@@ -64,7 +55,7 @@ const Hero = () => {
           }}
           className="hero-swiper"
         >
-          {ImageList.map((data) => (
+          {ImageList.length > 0 ? ImageList.map((data) => (
             <SwiperSlide key={data.id}>
               <div className="grid grid-cols-1 md:grid-cols-2 place-items-center">
                 {/* text content */}
@@ -104,7 +95,7 @@ const Hero = () => {
                   data-aos-once="true"
                 >
                   <img
-                    src={data.img}
+                    src={data.image || data.img}
                     alt={data.title}
                     className="w-[300px] h-[300px] sm:w-[400px] sm:h-[400px]
                     sm:scale-105 lg:scale-110 object-contain mx-auto"
@@ -112,7 +103,7 @@ const Hero = () => {
                 </div>
               </div>
             </SwiperSlide>
-          ))}
+          )) : <div>Loading...</div>}
         </Swiper>
       </div>
     </div>

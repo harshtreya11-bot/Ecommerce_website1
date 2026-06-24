@@ -1,35 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Topproduct1 from "../../assets/Topproducts/Topproduct1.png";
 import Topproduct2 from "../../assets/Topproducts/Topproduct2.png";
 import Topproduct3 from "../../assets/Topproducts/Topproduct3.png";
 import { FaStar } from "react-icons/fa";
-const ProductsData = [
-  {
-    id: 1,
-    img: Topproduct1,
-    title: "Printed Shirts",
-    Discription:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam, quod.",
-    price: "399",
-  },
-  {
-    id: 2,
-    img: Topproduct2,
-    title: "Women Western Dress",
-    Discription:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam, quod.",
-    price: "499",
-  },
-  {
-    id: 3,
-    img: Topproduct3,
-    title: "Earbuds",
-    Discription:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam, quod.",
-    price: "699",
-  },
-];
+import api from "../../api";
+
 const TopProduct = () => {
+  const [ProductsData, setProductsData] = useState([]);
+
+  useEffect(() => {
+    const fetchTopProducts = async () => {
+      try {
+        const response = await api.get('/api/products/?top_rated=true');
+        setProductsData(response.data);
+      } catch (error) {
+        console.error("Error fetching top products:", error);
+      }
+    };
+    fetchTopProducts();
+  }, []);
+
   return (
     <div>
       <div className="container">
@@ -62,7 +52,7 @@ const TopProduct = () => {
               {/* Image section*/}
               <div className="h-[210px] ">
                 <img
-                  src={data.img}
+                  src={data.image || data.img}
                   alt=""
                   className="max-w-[340px] block mx-auto transform -translate-y-20  group-hover:scale-105 duration-300 drop-shadow-md"
                 />
@@ -76,9 +66,9 @@ const TopProduct = () => {
                   <FaStar className="text-yellow-500" />
                   <FaStar className="text-yellow-500" />
                 </div>
-                <h1 className="text-xl font-bold">{data.title}</h1>
+                <h1 className="text-xl font-bold">{data.name || data.title}</h1>
                 <p className="text-sm text-gray-800 dark:text-gray-200">
-                  {data.Discription}
+                  {data.description || data.Discription}
                 </p>
                 <p className="text-xl font-bold">${data.price}</p>
                 <button

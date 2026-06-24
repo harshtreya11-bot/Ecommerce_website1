@@ -1,73 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import api from "../../api";
 
-import Img1 from "../../assets/Women/Womenimage1.png";
-import Img2 from "../../assets/Women/kurtis.png";
-import Img3 from "../../assets/Women/menswear.jpeg";
-import Img4 from "../../assets/Women/tshirts.png";
-import Img5 from "../../assets/Women/kidswear.png";
-import Img6 from "../../assets/Women/watches.png";
-
-const ProductsData = [
-  {
-    id: 1,
-    img: Img1,
-    title: "Womens Wear",
-    rating: 5.0,
-    color: "White",
-    aosDelay: 0,
-  },
-
-  {
-    id: 2,
-    img: Img2,
-    title: "Kurtis",
-    rating: 4.5,
-    color: "Red",
-    aosDelay: 200,
-  },
-
-  {
-    id: 3,
-    img: Img3,
-    title: "Men Wear",
-    rating: 4.7,
-    color: "Brown",
-    aosDelay: 400,
-  },
-
-  {
-    id: 4,
-    img: Img4,
-    title: "T-shirt",
-    rating: 4.4,
-    color: "Black",
-    aosDelay: 600,
-  },
-
-  {
-    id: 5,
-    img: Img5,
-    title: "Kids Wear",
-    rating: 4.5,
-    color: "Blue",
-    aosDelay: 800,
-  },
-
-  {
-    id: 6,
-    img: Img6,
-    title: "Watches",
-    rating: 4.8,
-    color: "Brown",
-    aosDelay: 1000,
-  },
-];
 const product = () => {
+  const [ProductsData, setProductsData] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await api.get('/api/products/?top_selling=true');
+        setProductsData(response.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   return (
     <div className="mt-10 mb-12">
       <div>
@@ -113,7 +66,7 @@ const product = () => {
             className="mySwiper"
           >
             {/*CardSection*/}
-            {ProductsData.map((data) => (
+            {ProductsData.length > 0 ? ProductsData.map((data) => (
               <SwiperSlide key={data.id}>
                 <div
                   className="space-y-3 flex flex-col items-center"
@@ -122,13 +75,13 @@ const product = () => {
                   key={data.id}
                 >
                   <img
-                    src={data.img}
+                    src={data.image || data.img}
                     alt="image"
                     className="mt-16 w-[250px] h-[250px] object-cover rounded-md"
                   />
                   <div>
                     <h3 className="text-gray-800 dark:text-gray-200 font-semibold">
-                      {data.title}
+                      {data.name || data.title}
                     </h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       {data.color}
@@ -143,7 +96,7 @@ const product = () => {
                   </div>
                 </div>
               </SwiperSlide>
-            ))}
+            )) : <div>Loading...</div>}
           </Swiper>
           {/*View All Button*/}
           <div className="flex items-center justify-center mt-10">
