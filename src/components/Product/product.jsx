@@ -12,7 +12,7 @@ const product = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await api.get('/api/products/?top_selling=true');
+        const response = await api.get("/api/products/?top_selling=true");
         setProductsData(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -66,37 +66,41 @@ const product = () => {
             className="mySwiper"
           >
             {/*CardSection*/}
-            {ProductsData.length > 0 ? ProductsData.map((data) => (
-              <SwiperSlide key={data.id}>
-                <div
-                  className="space-y-3 flex flex-col items-center"
-                  data-aos="fade-up"
-                  data-aos-delay={data.aosDelay}
-                  key={data.id}
-                >
-                  <img
-                    src={data.image || data.img}
-                    alt="image"
-                    className="mt-16 w-[250px] h-[250px] object-cover rounded-md"
-                  />
-                  <div>
-                    <h3 className="text-gray-800 dark:text-gray-200 font-semibold">
-                      {data.name || data.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {data.color}
-                    </p>
-                    {/*Star Rating*/}
-                    <div className="flex items-center justify-between gap-1">
-                      <FaStar className="text-yellow-400" />
-                      <span className="text-gray-800 dark:text-gray-200">
-                        {data.rating}
-                      </span>
+            {ProductsData.length > 0 ? (
+              ProductsData.map((data) => (
+                <SwiperSlide key={data.id}>
+                  <div
+                    className="space-y-3 flex flex-col items-center"
+                    data-aos="fade-up"
+                    data-aos-delay={data.aosDelay}
+                    key={data.id}
+                  >
+                    <img
+                      src={data.image || data.img}
+                      alt="image"
+                      className="mt-12 mb-12 w-[100px] h-[100px] object-cover rounded-md transition-transform duration-300 hover:scale-105 bg-white border-spacing-3"
+                    />
+                    <div>
+                      <h3 className="text-gray-800 dark:text-gray-200 font-semibold">
+                        {data.name || data.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {data.color}
+                      </p>
+                      {/*Star Rating*/}
+                      <div className="flex items-center justify-between gap-1">
+                        <FaStar className="text-yellow-400" />
+                        <span className="text-gray-800 dark:text-gray-200">
+                          {data.rating}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </SwiperSlide>
-            )) : <div>Loading...</div>}
+                </SwiperSlide>
+              ))
+            ) : (
+              <div>Loading...</div>
+            )}
           </Swiper>
           {/*View All Button*/}
           <div className="flex items-center justify-center mt-10">
